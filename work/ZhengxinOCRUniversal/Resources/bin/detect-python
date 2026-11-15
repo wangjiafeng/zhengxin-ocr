@@ -1,0 +1,37 @@
+#!/bin/zsh
+set -eu
+
+arch="$(uname -m)"
+typeset -a candidates
+candidates=(
+  /Library/Frameworks/Python.framework/Versions/*/bin/python3(N)
+  /opt/homebrew/bin/python3
+  /usr/local/bin/python3
+)
+path_python="$(command -v python3 2>/dev/null || true)"
+[[ -n "${path_python}" ]] && candidates+=("${path_python}")
+
+typeset -A seen
+for candidate in "${candidates[@]}"; do
+  [[ -x "${candidate}" ]] || continue
+  resolved="${candidate:A}"
+  [[ -n "${seen[${resolved}]:-}" ]] && continue
+  seen[${resolved}]=1
+
+  probe="$("${candidate}" -c 'import json,platform,sys; a=platform.machine(); v=sys.version_info; host=sys.argv[1]; ok=(a==host and v.major==3 and ((host=="arm64" and (3,10)<=v[:2]<=(3,13)) or (host=="x86_64" and (3,10)<=v[:2]<=(3,12)))); print(json.dumps({"path":sys.executable,"version":platform.python_version(),"architecture":a,"compatible":ok}))' "${arch}" 2>/dev/null || true)"
+  [[ -n "${probe}" ]] || continue
+  compatible="$(print -r -- "${probe}" | "${candidate}" -c 'import json,sys; print("1" if json.load(sys.stdin).get("compatible") else "0")' 2>/dev/null || true)"
+  if [[ "${compatible}" == "1" ]]; then
+    if [[ "${1:-}" == "--json" ]]; then
+      print -r -- "${probe}"
+    else
+      print -r -- "${candidate}"
+    fi
+    exit 0
+  fi
+done
+
+if [[ "${1:-}" == "--json" ]]; then
+  print '{"path":null,"version":null,"architecture":"'"${arch}"'","compatible":false}'
+fi
+exit 1

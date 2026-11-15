@@ -1,0 +1,14 @@
+# Generated applications, installers, copyright-registration packets, and build output
+/outputs/
+/work/AncientOCR/Bundle/
+/work/ZhengxinOCRWindows/dist/
+/work/ZhengxinOCRWindows/outputs/
+/work/ZhengxinOCRWindows/App/bin/
+/work/ZhengxinOCRWindows/App/obj/
+/work/ZhengxinOCRWindows/installer/bin/
+/work/ZhengxinOCRWindows/installer/obj/
+
+# Python and macOS metadata
+__pycache__/
+*.py[cod]
+.DS_Store

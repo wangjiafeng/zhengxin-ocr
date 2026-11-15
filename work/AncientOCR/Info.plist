@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>zh_CN</string>
+    <key>CFBundleDisplayName</key>
+    <string>正心OCR</string>
+    <key>CFBundleExecutable</key>
+    <string>AncientOCR</string>
+    <key>CFBundleIdentifier</key>
+    <string>local.zhengxin.ocr</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>正心OCR</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundleGetInfoString</key>
+    <string>正心OCR v1.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>26.0</string>
+    <key>LSArchitecturePriority</key>
+    <array><string>arm64</string></array>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>© 北京正笔正心文化发展有限公司</string>
+    <key>ZhengxinEdition</key>
+    <string>完整离线版</string>
+    <key>ZhengxinReleaseDate</key>
+    <string>2026年10月29日</string>
+</dict>
+</plist>

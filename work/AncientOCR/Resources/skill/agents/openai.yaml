@@ -1,0 +1,12 @@
+interface:
+  display_name: "正心OCR"
+  short_description: "在Mac本地识别扫描PDF和古籍"
+  brand_color: "#7A3E20"
+  default_prompt: "使用本地OCR识别文件，只报告任务状态、问题页和输出路径，不要在聊天中返回全文。"
+policy:
+  allow_implicit_invocation: true
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "local_ocr"
+      description: "正心OCR.app 本地 STDIO MCP 服务"

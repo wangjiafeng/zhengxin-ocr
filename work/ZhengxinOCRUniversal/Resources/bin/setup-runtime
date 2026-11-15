@@ -1,0 +1,82 @@
+#!/bin/zsh
+set -euo pipefail
+
+resource_dir="${0:A:h:h}"
+support_dir="${HOME}/Library/Application Support/ZhengxinOCRUniversal"
+runtime_dir="${support_dir}/runtime"
+arch="$(uname -m)"
+
+case "${arch}" in
+  arm64) uv_bin="${resource_dir}/tools/uv-arm64" ;;
+  x86_64) uv_bin="${resource_dir}/tools/uv-x86_64" ;;
+  *) print -u2 "不支持的处理器架构：${arch}"; exit 2 ;;
+esac
+
+mkdir -p "${runtime_dir}" "${support_dir}/cache" "${support_dir}/python"
+export UV_CACHE_DIR="${support_dir}/cache/uv"
+export UV_PYTHON_INSTALL_DIR="${support_dir}/python"
+export UV_NO_PROGRESS=1
+export ZHENGXIN_RUNTIME_DIR="${runtime_dir}"
+
+print "[1/4] 检测到处理器：${arch}"
+system_python="$("${resource_dir}/bin/detect-python" 2>/dev/null || true)"
+if [[ -n "${system_python}" ]]; then
+  python_version="$("${system_python}" -c 'import platform; print(platform.python_version())')"
+  python_source="system"
+  python_selector="${system_python}"
+  print "[2/4] 使用本机 Python ${python_version}：${system_python}"
+else
+  export UV_PYTHON_PREFERENCE=only-managed
+  print "[2/4] 未检测到兼容版本，安装受管理的 Python 3.11…"
+  "${uv_bin}" python install 3.11
+  python_version="3.11"
+  python_source="managed"
+  python_selector="3.11"
+fi
+
+print "[3/4] 创建独立运行环境…"
+"${uv_bin}" venv --python "${python_selector}" --clear "${runtime_dir}/venv"
+
+print "[4/4] 安装 OCR 依赖；首次安装需要下载，可能持续数分钟…"
+if [[ "${arch}" == "arm64" ]]; then
+  "${uv_bin}" pip install --python "${runtime_dir}/venv/bin/python" \
+    --index-strategy unsafe-best-match \
+    --extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/ \
+    'paddlepaddle==3.2.2' \
+    'paddleocr[doc-parser]==3.7.0' \
+    'mlx-vlm==0.7.1' \
+    'huggingface-hub==1.31.0' \
+    'pymupdf==1.28.2' \
+    'Pillow==12.3.0'
+  feature_level="full"
+else
+  "${uv_bin}" pip install --python "${runtime_dir}/venv/bin/python" \
+    'paddlepaddle==2.6.2' \
+    'paddleocr==2.8.1' \
+    'pymupdf>=1.24,<1.29' \
+    'Pillow>=10,<13'
+  feature_level="intel_legacy"
+fi
+export ZHENGXIN_PYTHON_SOURCE="${python_source}"
+export ZHENGXIN_PYTHON_BASE="${python_selector}"
+export ZHENGXIN_FEATURE_LEVEL="${feature_level}"
+
+print "清理安装缓存…"
+"${uv_bin}" cache clean >/dev/null
+
+"${runtime_dir}/venv/bin/python" - <<'PY'
+import json, os, platform, time
+from pathlib import Path
+marker = {
+    "installed_at": int(time.time()),
+    "architecture": platform.machine(),
+    "python": platform.python_version(),
+    "feature_level": os.environ["ZHENGXIN_FEATURE_LEVEL"],
+    "python_source": os.environ["ZHENGXIN_PYTHON_SOURCE"],
+    "python_base": os.environ["ZHENGXIN_PYTHON_BASE"],
+}
+Path(os.environ["ZHENGXIN_RUNTIME_DIR"]).joinpath("runtime.json").write_text(
+    json.dumps(marker, ensure_ascii=False, indent=2), encoding="utf-8"
+)
+PY
+print "运行环境安装完成。"

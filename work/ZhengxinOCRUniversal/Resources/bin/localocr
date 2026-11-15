@@ -1,0 +1,52 @@
+#!/bin/zsh
+set -eu
+
+resource_dir="${0:A:h:h}"
+support_dir="${HOME}/Library/Application Support/ZhengxinOCRUniversal"
+runtime_dir="${support_dir}/runtime"
+python_bin="${runtime_dir}/venv/bin/python"
+backend="${resource_dir}/backend/localocr_backend.py"
+command="${1:-}"
+
+if [[ "${command}" == "setup-runtime" ]]; then
+  shift
+  exec "${resource_dir}/bin/setup-runtime" "$@"
+fi
+
+if [[ ! -x "${python_bin}" ]]; then
+  if [[ "${command}" == "doctor" ]]; then
+    system_python_json="$("${resource_dir}/bin/detect-python" --json 2>/dev/null || true)"
+    system_python="$("${resource_dir}/bin/detect-python" 2>/dev/null || true)"
+    if [[ -n "${system_python_json}" && -n "${system_python}" ]]; then
+      SYSTEM_PYTHON_JSON="${system_python_json}" "${system_python}" - <<'PY'
+import json, os, platform
+probe = json.loads(os.environ["SYSTEM_PYTHON_JSON"])
+print(json.dumps({
+    "ready": False,
+    "runtime_ready": False,
+    "models_ready": False,
+    "architecture": platform.machine(),
+    "system_python": probe.get("path"),
+    "system_python_version": probe.get("version"),
+    "system_python_compatible": bool(probe.get("compatible")),
+    "summary": "已检测到本机 Python；OCR 专用环境尚未安装，请点击安装运行环境。",
+}, ensure_ascii=False, separators=(",", ":")))
+PY
+    else
+      print '{"ready":false,"runtime_ready":false,"models_ready":false,"architecture":"'"$(uname -m)"'","system_python":null,"system_python_version":null,"system_python_compatible":false,"summary":"未检测到兼容的本机 Python；安装运行环境时将自动补充 Python 3.11。"}'
+    fi
+    exit 0
+  fi
+  print -u2 "尚未安装运行环境，请先在 APP 中点击“安装运行环境”。"
+  exit 2
+fi
+
+export ZHENGXIN_OCR_SUPPORT="${support_dir}"
+export PADDLE_PDX_CACHE_HOME="${support_dir}/models/paddlex"
+export PADDLE_PDX_LOCAL_FONT_FILE_PATH="${support_dir}/models/paddlex/fonts/simfang.ttf"
+export HF_HOME="${support_dir}/models/huggingface-cache"
+export PADDLEOCR_HOME="${support_dir}/models/paddleocr"
+export PADDLE_HOME="${support_dir}/models/paddle"
+export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+export PYTHONDONTWRITEBYTECODE=1
+exec "${python_bin}" "${backend}" "$@"

@@ -1,0 +1,6 @@
+# Candidate set: must pass Windows integration tests before release.
+paddlepaddle==3.2.2
+paddleocr[doc-parser]==3.7.0
+pymupdf==1.28.2
+Pillow==12.3.0
+psutil==7.1.3

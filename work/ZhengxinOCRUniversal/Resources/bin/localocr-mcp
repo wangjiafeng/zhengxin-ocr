@@ -1,0 +1,21 @@
+#!/bin/zsh
+set -eu
+
+resource_dir="${0:A:h:h}"
+support_dir="${HOME}/Library/Application Support/ZhengxinOCRUniversal"
+python_bin="${support_dir}/runtime/venv/bin/python"
+server="${resource_dir}/backend/localocr_mcp.py"
+
+if [[ ! -x "${python_bin}" ]]; then
+  print -u2 "正心OCR 通用版尚未安装运行环境。请先打开 APP 完成安装。"
+  exit 2
+fi
+
+export ZHENGXIN_OCR_SUPPORT="${support_dir}"
+export PADDLE_PDX_CACHE_HOME="${support_dir}/models/paddlex"
+export HF_HOME="${support_dir}/models/huggingface-cache"
+export PADDLEOCR_HOME="${support_dir}/models/paddleocr"
+export PADDLE_HOME="${support_dir}/models/paddle"
+export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+export PYTHONDONTWRITEBYTECODE=1
+exec "${python_bin}" "${server}"

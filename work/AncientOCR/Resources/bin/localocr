@@ -1,0 +1,26 @@
+#!/bin/zsh
+set -eu
+
+resource_dir="${0:A:h:h}"
+backend="${resource_dir}/backend/localocr_backend.py"
+
+export PYTHONPATH="${resource_dir}/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PADDLE_PDX_CACHE_HOME="${resource_dir}/models/paddlex"
+export PADDLE_PDX_LOCAL_FONT_FILE_PATH="${resource_dir}/models/paddlex/fonts/simfang.ttf"
+export HF_HOME="${resource_dir}/models/huggingface-cache"
+export PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True
+export PYTHONDONTWRITEBYTECODE=1
+
+for candidate in \
+  /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 \
+  /opt/homebrew/bin/python3 \
+  /usr/local/bin/python3 \
+  /usr/bin/python3
+do
+  if [[ -x "${candidate}" ]]; then
+    exec "${candidate}" "${backend}" "$@"
+  fi
+done
+
+print -u2 "未找到可用的Python 3。请先从 python.org 安装ARM64版Python。"
+exit 127
