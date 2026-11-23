@@ -20,9 +20,9 @@
 
 | 客户端 | 支持范围 | 源码目录 | 状态 |
 | --- | --- | --- | --- |
-| macOS 通用安装版 | Intel 与 Apple Silicon；模式能力依芯片而异 | `work/ZhengxinOCRUniversal/` | 版本 1.0 |
-| macOS 完整离线版 | Apple Silicon，macOS 26 或更高版本 | `work/AncientOCR/` | 版本 1.0 |
-| Windows | Windows 11 x64 | `work/ZhengxinOCRWindows/` | 版本 1.0 测试候选；尚未完成 Windows 实机验收 |
+| macOS 通用安装版 | Intel 与 Apple Silicon；模式能力依芯片而异 | `work/ZhengxinOCRUniversal/` | 版本 1.0.1 |
+| macOS 完整离线版 | Apple Silicon，macOS 26 或更高版本 | `work/AncientOCR/` | 版本 1.0.1 |
+| Windows | Windows 11 x64 | `work/ZhengxinOCRWindows/` | 版本 1.0.1 测试候选 |
 
 通用版及 Windows 版会在首次运行时准备相应运行依赖或模型，完整离线版随安装包携带依赖和模型。
 
