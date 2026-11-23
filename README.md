@@ -63,6 +63,6 @@ python3 build.py --dotnet /path/to/dotnet
 
 `work/PaddleOCR/` 是 PaddleOCR 上游源码快照，继续按该目录中的 Apache License 2.0 及其版权声明提供。
 
-应用还使用 PaddlePaddle、MLX-VLM、.NET、uv 等第三方组件。
+应用还使用了 PaddlePaddle、MLX-VLM、.NET、uv 、caj2pdf-rust 等第三方组件。
 
 使用、修改或再分发时，请同时遵守各组件及模型的许可和上游条款。
