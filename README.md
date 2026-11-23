@@ -12,6 +12,8 @@
 - macOS 通用版可在 Intel 与 Apple Silicon Mac 上启动，并根据芯片提供相应的 OCR 模式。
 - Windows 客户端提供首次运行时准备 Python、依赖和模型的安装流程。
 - 支持通过图形界面、命令行及 STDIO MCP 使用识别后端。
+- 支持输入CAJ、PDF、EPUB、MOBI、AZW3、DOCX等文件或PNG、JPEG、TIFF等图片。
+- 输出MD文件。
 - 识别任务和输出在本机处理；模型或运行依赖可能需要在首次准备时下载。
 
 ## 下载
