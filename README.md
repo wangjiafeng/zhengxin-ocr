@@ -12,7 +12,7 @@
 - macOS 通用版可在 Intel 与 Apple Silicon Mac 上启动，并根据芯片提供相应的 OCR 模式。
 - Windows 客户端提供首次运行时准备 Python、依赖和模型的安装流程。
 - 支持通过图形界面、命令行及 STDIO MCP 使用识别后端。
-- 支持输入CAJ、PDF、EPUB、MOBI、AZW3、DOCX等文件或PNG、JPEG、TIFF等图片。
+- 支持输入CAJ、KDH、NH、PDF、EPUB、MOBI、AZW3、DOCX等文件或PNG、JPEG、TIFF等图片。
 - 输出MD文件。
 - 识别任务和输出在本机处理；模型或运行依赖可能需要在首次准备时下载。
 
@@ -20,9 +20,9 @@
 
 | 客户端 | 支持范围 | 源码目录 | 状态 |
 | --- | --- | --- | --- |
-| macOS 通用安装版 | Intel 与 Apple Silicon；模式能力依芯片而异 | `work/ZhengxinOCRUniversal/` | 版本 1.0.1 |
-| macOS 完整离线版 | Apple Silicon，macOS 26 或更高版本 | `work/AncientOCR/` | 版本 1.0.1 |
-| Windows | Windows 11 x64 | `work/ZhengxinOCRWindows/` | 版本 1.0.1 测试候选 |
+| macOS 通用安装版 | Intel 与 Apple Silicon；模式能力依芯片而异 | `work/ZhengxinOCRUniversal/` | 版本 1.0.2 |
+| macOS 完整离线版 | Apple Silicon，macOS 26 或更高版本 | `work/AncientOCR/` | 版本 1.0.2 |
+| Windows | Windows 11 x64 | `work/ZhengxinOCRWindows/` | 版本 1.0.2 测试候选 |
 
 通用版及 Windows 版会在首次运行时准备相应运行依赖或模型，完整离线版随安装包携带依赖和模型。
 
@@ -38,7 +38,7 @@ work/Shared/                 macOS 客户端共享组件
 work/PaddleOCR/              PaddleOCR 上游源码快照（Apache-2.0）
 ```
 
-macOS 完整离线版需要 Apple Silicon Mac、Xcode Command Line Tools、本机 Python 3.13 和网络连接。准备步骤会下载约数 GB 的 Python 依赖与 OCR 模型。进入 `work/AncientOCR/` 后运行：
+macOS 完整离线版需要 Apple Silicon Mac、Xcode Command Line Tools、本机 Python 3.1.2 和网络连接。准备步骤会下载约数 GB 的 Python 依赖与 OCR 模型。进入 `work/AncientOCR/` 后运行：
 
 ```sh
 python3 prepare_bundle.py
